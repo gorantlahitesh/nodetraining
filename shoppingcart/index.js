@@ -80,5 +80,23 @@ const ser=http.createServer(async(req,res)=>{
             res.end(err.message);
         }
     }
+    else if(req.url==="/delete-products" && req.method==="PUT"){
+        try{
+            let data="";
+            let body;
+            req.on("data",(chunk)=>{
+                data+=chunk;
+            });
+            req.on("end",async ()=>{
+                body=JSON.parse(data);
+                let {_id,pName,pDesc,pPrice}=body
+                await product.deleteOne({_id});
+                res.end("Product Deleted");
+            });
+        }
+        catch(err){
+            res.end(err.message);
+        }
+    }
 });
 ser.listen(port,()=>{console.log("Listening");});
